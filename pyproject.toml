@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "diffeomorphic-velocity-space-learning"
+version = "0.1.0"
+description = "Diffeomorphic Velocity-Space Learning for Surface Matching and Generation"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["surface-matching", "diffeomorphism", "diffusion", "geometry"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = [
+  "numpy>=2.3.5,<3", "scipy>=1.17,<2", "torch>=2.7,<2.8",
+  "pyvista>=0.46.5,<0.47", "vtk>=9.5.2,<9.6",
+  "torch-cluster>=1.6.3,<1.7", "torchdiffeq>=0.2.5,<0.3", "threadpoolctl>=3.6,<4",
+]
+
+[project.optional-dependencies]
+excel = ["openpyxl>=3.1.5,<4"]
+
+[project.scripts]
+dvsl = "dvsl.cli:main"
+dvsl-match-df-psm = "dvsl.cli:match_df_psm"
+dvsl-match-dtm = "dvsl.cli:match_dtm"
+dvsl-match-ges = "dvsl.cli:match_ges"
+dvsl-recover-alpha = "dvsl.cli:recover_alpha"
+dvsl-generate = "dvsl.cli:generate"
+dvsl-basis = "dvsl.cli:basis"
+dvsl-ot = "dvsl.cli:ot"
+dvsl-preprocess = "dvsl.cli:preprocess"
+dvsl-preprocess-corresponding = "dvsl.cli:preprocess_corresponding"
+dvsl-preprocess-noncorresponding = "dvsl.cli:preprocess_noncorresponding"
+
+[tool.setuptools]
+packages = ["dvsl"]
+include-package-data = false

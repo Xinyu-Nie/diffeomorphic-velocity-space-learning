@@ -1,0 +1,19 @@
+include README.md LICENSE pyproject.toml requirements.txt requirements-cu128.txt environment.yml .gitignore
+recursive-include docs *.md
+include match_df_psm.py
+include match_dtm.py
+include match_ges.py
+include recover_df_psm_from_alpha.py
+include generate_calvel_diff.py
+include ComputeUnifiedMultiRKHSMercerBasis.py
+include MeshOTmap.py
+include preprocess_surfaces.py
+include preprocess_corresponding.py
+include preprocess_noncorresponding.py
+prune tests
+prune test
+prune Examples
+prune dist
+prune build
+exclude validate_preprocessing.py SOURCE_MANIFEST.json
+global-exclude __pycache__ *.py[cod]

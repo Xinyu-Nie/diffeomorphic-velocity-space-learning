@@ -1,0 +1,9 @@
+# Eight direct runtime dependencies. Install matching torch/torch-cluster binaries first.
+numpy>=2.3.5,<3
+scipy>=1.17,<2
+torch>=2.7,<2.8
+pyvista>=0.46.5,<0.47
+vtk>=9.5.2,<9.6
+torch-cluster>=1.6.3,<1.7
+torchdiffeq>=0.2.5,<0.3
+threadpoolctl>=3.6,<4

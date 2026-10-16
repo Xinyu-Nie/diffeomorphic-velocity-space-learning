@@ -1,0 +1,13 @@
+# Validated direct dependencies from diffusion5090, Python 3.12 / CUDA 12.8.
+# Transitive dependencies are resolved by pip; this is not a complete lock file.
+--extra-index-url https://download.pytorch.org/whl/cu128
+--find-links https://data.pyg.org/whl/torch-2.7.0+cu128.html
+--only-binary torch,torch-cluster
+numpy==2.3.5
+scipy==1.17.0
+torch==2.7.0+cu128
+pyvista==0.46.5
+vtk==9.5.2
+torch-cluster==1.6.3+pt27cu128
+torchdiffeq==0.2.5
+threadpoolctl==3.6.0
