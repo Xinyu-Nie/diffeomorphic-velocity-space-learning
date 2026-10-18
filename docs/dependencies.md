@@ -15,8 +15,6 @@ The runtime list comes from imports in the production `dvsl` modules, including 
 
 Optional: `openpyxl` 3.1.5 for the existing Excel quality-report helper (`excel` extra). It is not required for CSV/JSON reports or the tested core workflows.
 
-The package does not directly require DiffusionNet, torch-geometric, pyg-lib, torch-scatter, torch-sparse, torch-spline-conv, torchvision, torchaudio, scikit-learn, pandas, potpourri3d, robust-laplacian, pymeshlab, smplx or PyLaTeX. PCA uses NumPy/SciPy and PyTorch; no scikit-learn PCA is used. CalVel-Diff uses an MLP, not a graph network.
-
 Pip will still install dependencies of these eight libraries, such as PyTorch's support libraries and PyVista's plotting/I/O dependencies. A library not directly imported by DVSL may therefore still be necessary transitively. Do not manually uninstall transitive dependencies from a shared environment.
 
-`pyproject.toml` defines the installable runtime requirements. `requirements.txt` mirrors the compatible ranges; `requirements-cu128.txt` pins the validated direct versions and binary sources. `environment.yml` supplies Python and pip, then uses that pinned recipe. Only the documented versions have reproduction evidence; the declared compatible ranges have not each been independently benchmarked.
+`pyproject.toml` defines the installable runtime requirements. `requirements.txt` mirrors the compatible ranges; `requirements-cu128.txt` pins the validated direct versions and binary sources. `environment.yml` supplies Python and pip, then uses that pinned recipe. 
