@@ -91,7 +91,7 @@ record in `two_stage_summary.json`.
 ## Memory and numerical scope
 
 Use the validated CUDA environment with a GPU and sufficient system RAM.
-The original unchunked ico6 field exhausted a 96 GiB GPU. The helper enables
+The helper enables
 `--field_chunk_size 2000000`, which chunks field edge tensors and recomputes them
 during backward, and `--cuda_cache_trim_gib 24`, which releases inactive allocator
 cache between Adam updates if reserved memory exceeds 24 GiB. The latter is a
@@ -101,25 +101,16 @@ floating-point accumulation order can introduce small numerical differences.
 Other CLI users retain legacy evaluation by default (`--field_chunk_size 0`).
 
 The previous full ico6→ico5 run with this memory strategy completed 500 + 800
-updates with approximately 15.42 GiB peak allocated and 18.38 GiB peak reserved
-CUDA memory on the tested 96 GiB GPU. This is an observed run, not a guarantee for
-other hardware or inputs. `--field-chunk-size` can reduce field block size further;
+updates with approximately 15.42 GiB peak allocated and 18.38 GiB peak. `--field-chunk-size` can reduce field block size further;
 the basis, graph indices, trajectories and attachment still consume memory.
 
 The processed pial targets retain small triangle intersections detected by the
 existing quality checker (96 ico5 and 587 ico6 intersection pairs under its
 default tolerance). They are supplied unchanged; they should not be described
 as intersection-free ground truth. Both processed inflated sources have zero
-detected intersection pairs and no degenerate faces. Finite trajectories and
-positive sampled Jacobians do not establish a global injectivity guarantee.
+detected intersection pairs and no degenerate faces. 
 
-Previously completed cross-resolution runs on these exact input meshes yielded
-ASSD/HD95 of approximately 0.001976/0.005163 (ico5→ico6) and
-0.001705/0.005070 (ico6→ico5), in normalized units, with no detected intersections
-or degenerate faces in the fitted surfaces. These numbers describe the previous
-500 + 800-update tests, not a guarantee of bitwise reproduction with a newly
-constructed basis or another GPU. Same-resolution 800-update commands are
-provided separately; they are not inferred to have those cross-resolution scores.
+
 
 ## Optional OT regeneration
 
