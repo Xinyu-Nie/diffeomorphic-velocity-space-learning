@@ -65,9 +65,7 @@ Other workflows require your own triangular meshes, exact basis assets, and matc
 
 ## Workflow and numerical scope
 
-See [surface matching and preparation](docs/workflows.md), [CalVel-Diff including hippocampal settings](docs/calvel-diff.md), and [numerical conventions and limitations](docs/numerical-conventions.md).
-
-Component reproduction covered five cortical single-stage and five hippocampal two-stage fits at full budgets, ten alpha recoveries, fresh cortical/hippocampal training with 250/86 generated surfaces, one-fold benchmark comparisons excluding FID, two basis constructions, five OT maps, and preprocessing for ten subjects. These checks establish functionality in the validated environment, not full-cohort or ten-fold statistical reproduction. Recovery is approximate; positive sampled Jacobians do not guarantee an intersection-free discrete surface. Exact basis coordinates must be retained with existing beta paths and models.
+See [surface matching and preparation](docs/workflows.md), [CalVel-Diff settings](docs/calvel-diff.md), and [numerical conventions and limitations](docs/numerical-conventions.md).
 
 ## License
 
