@@ -1,7 +1,6 @@
 # Prepared BrainWeb cortical matching examples
 
-These examples match processed inflated sources to processed left pial targets
-reconstructed with FreeSurfer from a synthetic BrainWeb T1 image. 
+These examples match processed inflated sources to processed left pial targets reconstructed with FreeSurfer from a synthetic BrainWeb T1 image. 
 See [source attribution](NOTICE.md) and [asset provenance and SHA-256 hashes](provenance.json).
 
 ## Install and run
@@ -20,7 +19,7 @@ python examples/brainweb/run_matching.py ico6-to-ico5
 ```
 
 Run the matching commands sequentially. They work in PowerShell and Bash as
-written. No surface preprocessing, FreeSurfer, original T1 image or OT computation
+written. No surface preprocessing, original T1 image, or OT computation
 is required. All six VTK assets are already prepared and checked by SHA-256.
 Examples and assets are included in the repository and source distribution;
 they are not bundled in the installed wheel.
