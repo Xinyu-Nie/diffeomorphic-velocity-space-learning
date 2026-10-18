@@ -1,8 +1,7 @@
 # Prepared BrainWeb cortical matching examples
 
 These examples match processed inflated sources to processed left pial targets
-reconstructed with FreeSurfer from a synthetic BrainWeb T1 image. They illustrate
-the workflow; they are not an ADNI benchmark or a reproduction of Table IV.
+reconstructed with FreeSurfer from a synthetic BrainWeb T1 image. 
 See [source attribution](NOTICE.md) and [asset provenance and SHA-256 hashes](provenance.json).
 
 ## Install and run
