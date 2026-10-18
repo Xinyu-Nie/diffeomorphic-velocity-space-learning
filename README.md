@@ -20,11 +20,11 @@ Alternatively, with Python 3.12 and your environment activated:
 
 ```bash
 python -m pip install -r requirements-cu128.txt
-python -m pip install .
+python -m pip install.
 dvsl-match-df-psm --help
 ```
 
-For development use `python -m pip install -e .` after installing the binary dependencies. Install Excel support only if required: `python -m pip install '.[excel]'`.
+For development, use `python -m pip install -e .` after installing the binary dependencies. Install Excel support only if required: `python -m pip install '.[excel]'`.
 
 `torch-cluster` must match the selected PyTorch and CUDA build. The pinned recipe uses only the needed cluster extension; it does not install all PyTorch Geometric extensions. See [installation](docs/installation.md) and [dependencies](docs/dependencies.md). We have not tested Python versions other than 3.12.
 
@@ -50,7 +50,7 @@ dvsl-generate train --help
 dvsl-generate sample --help
 ```
 
-For a complete surface-matching example, use the [prepared BrainWeb ico5/ico6 surfaces](examples/brainweb/README.md). Four processed meshes and both cross-resolution OT surfaces are included; no FreeSurfer installation, surface preprocessing or OT computation is needed. The example helper builds and reuses a source Mercer basis, then runs the standard matching CLI:
+For a complete surface-matching example, use the [prepared BrainWeb ico5/ico6 surfaces](examples/brainweb/README.md). Four processed meshes and both cross-resolution OT surfaces are included; no surface preprocessing or OT computation is needed. The example helper builds and reuses a source Mercer basis, then runs the standard matching CLI:
 
 ```bash
 python examples/brainweb/run_matching.py ico5-to-ico5
@@ -61,7 +61,7 @@ python examples/brainweb/run_matching.py ico6-to-ico5
 
 The first two commands use pointwise attachment for 800 updates. The last two use 500 pointwise updates toward the supplied OT surface, followed by 800 varifold updates toward the real pial target. Run these commands from the repository root after installation; see the example guide for CUDA/memory requirements and expanded CLI commands.
 
-Other workflows require your own triangular meshes, exact basis assets and matching populations. Apart from the explicitly included illustrative BrainWeb assets, datasets, pretrained models, local reproduction outputs and validation harnesses are excluded. CLI defaults are generic; paper experiment budgets require explicit options.
+Other workflows require your own triangular meshes, exact basis assets, and matching populations.
 
 ## Workflow and numerical scope
 
