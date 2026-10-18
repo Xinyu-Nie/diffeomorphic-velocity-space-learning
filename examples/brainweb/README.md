@@ -46,12 +46,11 @@ the **source's** vertex order/connectivity and target barycentric positions; it
 is an initialization target, not the final anatomical target. Stage 2 starts
 again from the original inflated source, warm-started with the optimized
 stage-1 beta coefficients and a fresh optimizer. The original pial surface is
-used for its varifold attachment. There is no pointwise comparison between
-different resolutions.
+used for its varifold attachment. 
 
 Both source and target resolutions share the ico6-derived normalized frame.
 The same physical transforms were applied at each resolution. Distances are in
-normalized coordinates, not millimetres. Do not renormalize or smooth these files
+normalized coordinates, not millimeters. Do not renormalize or smooth these files
 before using the included OT maps or a cached basis.
 
 ## Settings and standard CLI commands
