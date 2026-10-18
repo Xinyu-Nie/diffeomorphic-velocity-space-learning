@@ -2,11 +2,11 @@
 
 Python implementation of **Diffeomorphic Velocity-Space Learning for Surface Matching and Generation**: Dual-Frame Pullback Surface Matching (DF-PSM) and Calibrated Geometry-Refined Velocity Diffusion (CalVel-Diff).
 
-DF-PSM optimizes Eulerian coefficient paths **beta**, integrates the ambient flow and its differential, and projects the realized pullback to obtain auxiliary **alpha**. CalVel-Diff learns optimized beta paths. The package also includes GES/DTM comparators, surface preprocessing, OT initialization, Mercer bases and alpha-recovery diagnostics.
+DF-PSM optimizes Eulerian coefficient paths, integrates the ambient flow and its differential. CalVel-Diff learns optimized paths. The package also includes GES/DTM comparators, surface preprocessing, OT initialization, Mercer bases, and alpha-recovery diagnostics.
 
 ## Installation
 
-The validated configuration is Python **3.12**, PyTorch **2.7.0 / CUDA 12.8**, and a matching `torch-cluster` binary. Full-size GPU experiments and the Mercer constructor require CUDA. Small preprocessing, OT, matching and generation checks can use CPU where supported.
+The validated configuration is Python **3.12**, PyTorch **2.7.0 / CUDA 12.8**, and a matching `torch-cluster` binary. Full-size GPU experiments and the Mercer constructor require CUDA. Small preprocessing, OT, matching, and generation checks can use CPU where supported.
 
 From this repository root, create a separate environment:
 
@@ -26,7 +26,7 @@ dvsl-match-df-psm --help
 
 For development use `python -m pip install -e .` after installing the binary dependencies. Install Excel support only if required: `python -m pip install '.[excel]'`.
 
-`torch-cluster` must match the selected PyTorch and CUDA build. The pinned recipe uses only the needed cluster extension; it does not install all PyTorch Geometric extensions. See [installation](docs/installation.md) and [dependencies](docs/dependencies.md). Python versions other than 3.12 are currently outside the tested package range.
+`torch-cluster` must match the selected PyTorch and CUDA build. The pinned recipe uses only the needed cluster extension; it does not install all PyTorch Geometric extensions. See [installation](docs/installation.md) and [dependencies](docs/dependencies.md). We have not tested Python versions other than 3.12.
 
 ## Commands
 
