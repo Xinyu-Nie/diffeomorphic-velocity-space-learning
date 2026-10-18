@@ -1,0 +1,92 @@
+{
+  "description": "Prepared BrainWeb left cortical matching illustration",
+  "source_url": "https://brainweb.bic.mni.mcgill.ca/brainweb/",
+  "image_identifier": "t1_icbm_normal_1mm_pn0_rf0.mnc.gz",
+  "reconstruction": "User-supplied FreeSurfer left pial, inflated and sphere.reg; exact version/command unavailable.",
+  "resampling": "Nearest-neighbor forward/reverse transfer through registered sphere to FreeSurfer ico5/ico6.",
+  "inflated_processing": "20 Laplacian smoothing iterations at strength 0.2, followed by shared ico6-derived source affine.",
+  "pial_processing": "Previously smoothed resampled pial meshes, transformed using the same ico6-derived pial similarity at each resolution.",
+  "coordinates": "Shared normalized frame; not millimetres. Do not reprocess before using these maps or cached bases.",
+  "same_resolution_face_arrays_and_vertex_order_verified": true,
+  "license_note": "Code: MIT. BrainWeb-derived assets: retain NOTICE.md and original source attribution/terms.",
+  "files": {
+    "surfaces/lh_inflated_ico5.vtk": {
+      "sha256": "912c55bcc6861c81dd31a420a6127dc2146c80470915a27217aabfa0ea9de036",
+      "bytes": 638713,
+      "role": "source",
+      "vertices": 10242,
+      "triangles": 20480,
+      "finite": true,
+      "degenerate_faces": 0,
+      "self_intersection_pairs": 0,
+      "watertight": true
+    },
+    "surfaces/lh_pial_ico5.vtk": {
+      "sha256": "520f6b9242545c35d86251f48a447d0e7366474601ad463cb7cb904c72c00ee7",
+      "bytes": 761958,
+      "role": "real_target",
+      "vertices": 10242,
+      "triangles": 20480,
+      "finite": true,
+      "degenerate_faces": 0,
+      "self_intersection_pairs": 96,
+      "watertight": true
+    },
+    "surfaces/lh_inflated_ico6.vtk": {
+      "sha256": "7fbc35c089f5a73ff99e0f1872cd1972ff7109a0b72983b2f183826dd37d371d",
+      "bytes": 2754381,
+      "role": "source",
+      "vertices": 40962,
+      "triangles": 81920,
+      "finite": true,
+      "degenerate_faces": 0,
+      "self_intersection_pairs": 0,
+      "watertight": true
+    },
+    "surfaces/lh_pial_ico6.vtk": {
+      "sha256": "f6f768eeb2d60057621e2f3a765b1028e4993348d7c7c135a62847030189cef4",
+      "bytes": 3247346,
+      "role": "real_target",
+      "vertices": 40962,
+      "triangles": 81920,
+      "finite": true,
+      "degenerate_faces": 0,
+      "self_intersection_pairs": 587,
+      "watertight": true
+    },
+    "ot/ico5_to_ico6/lh_pial_ico6__ot_T_of_x.vtk": {
+      "sha256": "b261c49b2c7c217928f180e00aedb628d7a0275467210e484bf2aab6222641f9",
+      "bytes": 901329,
+      "role": "OT_corresponding_initialization_target",
+      "source": "lh_inflated_ico5.vtk",
+      "real_target": "lh_pial_ico6.vtk",
+      "vertices": 10242,
+      "triangles": 20480,
+      "source_connectivity_and_order_preserved": true,
+      "eps": 0.01,
+      "max_iter": 2000,
+      "tol": 1e-09,
+      "full_plan_barycenter": true,
+      "converged_iterations": 1850,
+      "row_mass_l1": 9.00551876993616e-15,
+      "column_mass_l1": 1.3199698228867987e-17
+    },
+    "ot/ico6_to_ico5/lh_pial_ico5__ot_T_of_x.vtk": {
+      "sha256": "afd90267785b3bf95306ebf5e561e2656c11748750e33f41c793f381ef14b4b5",
+      "bytes": 3604690,
+      "role": "OT_corresponding_initialization_target",
+      "source": "lh_inflated_ico6.vtk",
+      "real_target": "lh_pial_ico5.vtk",
+      "vertices": 40962,
+      "triangles": 81920,
+      "source_connectivity_and_order_preserved": true,
+      "eps": 0.01,
+      "max_iter": 2000,
+      "tol": 1e-09,
+      "full_plan_barycenter": true,
+      "converged_iterations": 1700,
+      "row_mass_l1": 7.853476712265522e-14,
+      "column_mass_l1": 1.3590220122221622e-17
+    }
+  }
+}
