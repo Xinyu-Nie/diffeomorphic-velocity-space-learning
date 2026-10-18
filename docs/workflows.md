@@ -9,8 +9,7 @@ dvsl-preprocess-corresponding --source template.vtk --targets subject.vtk --outp
 dvsl-preprocess-noncorresponding --source template.vtk --targets subject.vtk --output-dir prepared/independent --smooth-iterations 20 --smooth-lambda 0.2
 ```
 
-Corresponding mode requires trusted ordered vertices. It area-centers and RMS-normalizes the target, then fits a proper similarity transform to the supplied source; no reflection, no additional smoothing by default. Independent mode area-centers each target and applies `2/largest_axis_extent`, then defaults to 20 uniform Laplacian iterations at 0.2. Six-significant-digit ASCII export is retained; smoothing uses that rounded intermediate, without post-smoothing renormalization. Topology/count equality in auto mode is a heuristic, not proof of correspondence.
-
+Corresponding mode requires trusted ordered vertices. It area-centers and RMS-normalizes the target, then fits a proper similarity transform to the supplied source; no reflection, no additional smoothing by default. Independent mode area-centers each target and applies `2/largest_axis_extent`, then defaults to 20 uniform Laplacian iterations at 0.2. 
 ## Mercer basis
 
 ```bash
@@ -25,7 +24,7 @@ CUDA and matching `torch-cluster` are required. The example rank must fit your s
 dvsl-ot --source template.vtk --targets subject.vtk --output-dir ot --eps 0.01 --max-iter 2000 --topk 32
 ```
 
-This produces `<target_stem>__ot_T_of_x.vtk` and corresponding NPZ arrays. `--targets` accepts one VTK file or a text list. The archived hippocampal tests used 2,000 iterations; CLI default is 1,000. The dense area-weighted Sinkhorn computation runs on CPU. The full-plan barycenter and renormalized top-k sparse transport weights are distinct exports. The absolute scaling-vector stopping criterion can remain unsatisfied despite small transport marginal errors.
+This produces `<target_stem>__ot_T_of_x.vtk` and corresponding NPZ arrays. `--targets` accepts one VTK file or a text list. The archived hippocampal tests used 2,000 iterations; the CLI default is 1,000. The dense area-weighted Sinkhorn computation runs on CPU. The full-plan barycenter and renormalized top-k sparse transport weights are distinct exports. The absolute scaling-vector stopping criterion can remain unsatisfied despite small transport marginal errors.
 
 ## Matching
 
@@ -34,9 +33,9 @@ dvsl-match-df-psm --pairs template.vtk subject.vtk --basis basis.npz --radii 0.1
 dvsl-match-df-psm --pairs template.vtk subject.vtk --basis basis.npz --radii 1.0 --metric varifold --varifold_radius 0.16 --varifold_backend stable --two-stage --ot-dir ot --stage1-adam-iters 500 --stage2-adam-iters 2000 --output_dir runs/two_stage
 ```
 
-Examples show workflow syntax; specify ranks, knots, integration settings and all regularization weights for your experiment. Paper budgets are not generic CLI defaults. `--two-stage` fits the OT corresponding surface pointwise, then fits the real target, using the original source in both stages and a verified optimized-state handoff.
+Examples show workflow syntax; specify ranks, knots, integration settings, and all regularization weights. `--two-stage` fits the OT corresponding surface pointwise, then fits the real target, using the original source in both stages and a verified optimized-state handoff.
 
-DF-PSM attachments: `pointwise`, `chamfer`, `surface_chamfer`, `varifold`. GES/DTM expose pointwise, vertex Chamfer and varifold. `--metric` accepts the legacy `--loss` alias. All three have `--help` and two-stage support. Matching exports include controls, trajectories, configuration, history, summary and deformed VTK. Use fresh output directories.
+DF-PSM attachments: `pointwise`, `chamfer`, `surface_chamfer`, `varifold`. GES/DTM expose pointwise, vertex Chamfer, and varifold. `--metric` accepts the legacy `--loss` alias. All three have `--help` and two-stage support. Matching exports include controls, trajectories, configuration, history, summary, and deformed VTK. Use fresh output directories.
 
 ## Alpha recovery
 
