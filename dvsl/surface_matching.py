@@ -64,6 +64,7 @@ from .kernels import (
     wendland_phi_dphi,
 )
 from .surface_quality import mesh_quality_metrics
+from .field_evaluation import bounded_field_and_jacobian
 
 
 def set_seed(seed: int) -> None:
@@ -148,6 +149,7 @@ def resample_flow_path(
     kernel: str,
     max_neighbors: int,
     recompute_velocity: bool,
+    field_chunk_size: int = 0,
 ) -> "FlowPath":
     """Sample a dense integrated path on the primary beta/alpha knot grid."""
     sample_count = int(beta.shape[0])
@@ -170,6 +172,7 @@ def resample_flow_path(
                 weights,
                 kernel,
                 max_neighbors,
+                field_chunk_size,
             )
             velocities.append(velocity)
             controls.append(realized_control)
@@ -292,8 +295,13 @@ def moving_field_and_jacobian(
     weights: Sequence[float],
     kernel: str,
     max_neighbors: int,
+    field_chunk_size: int = 0,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """Return mixed-kernel u(q), Du(q), and the shared p=U_R beta."""
+    if field_chunk_size > 0:
+        return bounded_field_and_jacobian(
+            q, beta_t, U_control, radii, weights, kernel, max_neighbors, field_chunk_size
+        )
     if len(radii) != len(weights):
         raise ValueError("Kernel radii and weights must have the same length.")
     p = U_control @ beta_t
@@ -341,6 +349,7 @@ def integrate_eulerian_path(
     kernel: str,
     max_neighbors: int,
     integrator: str,
+    field_chunk_size: int = 0,
 ) -> FlowPath:
     """Integrate q and the same-flow deformation Jacobian J."""
     identity = torch.eye(3, dtype=source.dtype, device=source.device)
@@ -358,7 +367,7 @@ def integrate_eulerian_path(
         t1 = t0 + dt
         beta0 = interpolate_knots(beta, t0)
         velocity0, Du0, p0 = moving_field_and_jacobian(
-            q, beta0, U_control, radii, weights, kernel, max_neighbors
+            q, beta0, U_control, radii, weights, kernel, max_neighbors, field_chunk_size
         )
         dJ0 = torch.einsum("vij,vjk->vik", Du0, J)
         velocity_frames.append(velocity0)
@@ -378,6 +387,7 @@ def integrate_eulerian_path(
                 weights,
                 kernel,
                 max_neighbors,
+                field_chunk_size,
             )
             dJ_mid = torch.einsum("vij,vjk->vik", Du_mid, J_mid)
             q = q + dt * velocity_mid
@@ -393,6 +403,7 @@ def integrate_eulerian_path(
                 weights,
                 kernel,
                 max_neighbors,
+                field_chunk_size,
             )
             dJ2 = torch.einsum("vij,vjk->vik", Du2, J2)
             q3 = q + 0.5 * dt * velocity2
@@ -405,6 +416,7 @@ def integrate_eulerian_path(
                 weights,
                 kernel,
                 max_neighbors,
+                field_chunk_size,
             )
             dJ3 = torch.einsum("vij,vjk->vik", Du3, J3)
             q4 = q + dt * velocity3
@@ -417,6 +429,7 @@ def integrate_eulerian_path(
                 weights,
                 kernel,
                 max_neighbors,
+                field_chunk_size,
             )
             dJ4 = torch.einsum("vij,vjk->vik", Du4, J4)
             q = q + (dt / 6.0) * (
@@ -430,7 +443,7 @@ def integrate_eulerian_path(
         J_frames.append(J)
 
     velocity_T, _, control_T = moving_field_and_jacobian(
-        q, beta[-1], U_control, radii, weights, kernel, max_neighbors
+        q, beta[-1], U_control, radii, weights, kernel, max_neighbors, field_chunk_size
     )
     velocity_frames.append(velocity_T)
     control_frames.append(control_T)
@@ -556,6 +569,7 @@ class DualFramePullbackObjective(nn.Module):
                 self.args.kernel,
                 self.args.max_neighbors,
                 self.args.integrator,
+                getattr(self.args, "field_chunk_size", 0),
             )
             return (
                 integrated.q,
@@ -604,6 +618,7 @@ class DualFramePullbackObjective(nn.Module):
             self.args.kernel,
             self.args.max_neighbors,
             recompute_velocity=True,
+            field_chunk_size=getattr(self.args, "field_chunk_size", 0),
         )
         # Equation (92) is evaluated on the same primary temporal grid as beta.
         projection = project_template_pullback(
@@ -747,6 +762,10 @@ def optimize_eulerian_controls(
         checkpoint_path = Path(args.output_dir) / "adam_checkpoint.pt"
         ignored = {"resume_checkpoint", "checkpoint_every", "output_dir", "log_every"}
         checkpoint_config = {k: v for k, v in vars(args).items() if k not in ignored}
+        # Keep legacy checkpoints compatible when the new options are inactive.
+        for key in ("field_chunk_size", "cuda_cache_trim_gib"):
+            if not checkpoint_config.get(key, 0):
+                checkpoint_config.pop(key, None)
         first_iteration = 0
         if getattr(args, "resume_checkpoint", False) and checkpoint_path.is_file():
             # Locally generated optimizer state, including RNG state.
@@ -773,6 +792,9 @@ def optimize_eulerian_controls(
             optimizer.zero_grad(set_to_none=True)
             evaluate("adam", clip=True)
             optimizer.step()
+            trim_gib = getattr(args, "cuda_cache_trim_gib", 0.)
+            if beta.is_cuda and trim_gib > 0 and torch.cuda.memory_reserved(beta.device) > trim_gib * 2**30:
+                torch.cuda.empty_cache()
             if checkpoint_every > 0 and (
                 (iteration + 1) % checkpoint_every == 0 or iteration + 1 == args.adam_iters
             ):
@@ -949,6 +971,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--n_steps", "--integration_steps", type=int, default=30)
     parser.add_argument("--integrator", choices=["euler", "midpoint", "rk4"], default="midpoint")
     parser.add_argument("--max_neighbors", type=int, default=512)
+    parser.add_argument("--field_chunk_size", type=int, default=0,
+                        help="Edges per field block with nested backward recomputation; 0 retains legacy evaluation.")
+    parser.add_argument("--cuda_cache_trim_gib", type=float, default=0.,
+                        help="Release inactive CUDA cache between Adam updates above this reserved GiB threshold; 0 disables.")
     parser.add_argument(
         "--checkpoint_path",
         action="store_true",
@@ -1056,6 +1082,8 @@ def validate_arguments(args: argparse.Namespace) -> None:
             raise ValueError(f"--{name} values must be finite and positive.")
     if args.adam_iters < 0 or args.lbfgs_iters < 0 or args.checkpoint_every < 0:
         raise ValueError("Iteration counts and checkpoint interval cannot be negative.")
+    if args.field_chunk_size < 0 or args.cuda_cache_trim_gib < 0:
+        raise ValueError("Field chunk size and CUDA cache threshold cannot be negative.")
     for name, value in vars(args).items():
         if isinstance(value, float) and not math.isfinite(value):
             raise ValueError(f"--{name} must be finite.")
@@ -1259,6 +1287,7 @@ def main() -> None:
             args.kernel,
             args.max_neighbors,
             args.integrator,
+            args.field_chunk_size,
         )
         dense_projection = final_projection_all_frames(
             final_path, U_body, lam_body, args.pullback_solve_ridge
@@ -1272,6 +1301,7 @@ def main() -> None:
             args.kernel,
             args.max_neighbors,
             recompute_velocity=True,
+            field_chunk_size=args.field_chunk_size,
         )
         projection = final_projection_all_frames(
             primary_path, U_body, lam_body, args.pullback_solve_ridge
