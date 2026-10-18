@@ -5,7 +5,7 @@ from the [BrainWeb Simulated Brain Database](https://brainweb.bic.mni.mcgill.ca/
 The supplied image identifier was `t1_icbm_normal_1mm_pn0_rf0.mnc.gz`
 (normal ICBM phantom, 1 mm, 0% noise and 0% intensity nonuniformity).
 
-FreeSurfer reconstruction supplied the left pial, inflated and registered spherical
+FreeSurfer 6.0 reconstruction supplied the left pial and inflated
 surfaces. The pial and inflated surfaces were resampled to ico5 and ico6 and
 processed for this illustrative matching example. These are reconstructed and
 processed meshes, not BrainWeb's original anatomical ground-truth surfaces.
