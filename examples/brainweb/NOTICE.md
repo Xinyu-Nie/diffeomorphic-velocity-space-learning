@@ -7,17 +7,9 @@ The supplied image identifier was `t1_icbm_normal_1mm_pn0_rf0.mnc.gz`
 
 FreeSurfer 6.0 reconstruction supplied the left pial and inflated
 surfaces. The pial and inflated surfaces were resampled to ico5 and ico6 and
-processed for this illustrative matching example. These are reconstructed and
-processed meshes, not BrainWeb's original anatomical ground-truth surfaces.
-The exact FreeSurfer version and reconstruction command are not recorded with
-the supplied reconstruction.
+processed for this illustrative matching example. 
 
-The repository's MIT license applies to its software. It does not grant rights
-over the underlying BrainWeb data. Retain this attribution with the derived
-assets and consult the BrainWeb site for the source data's terms and requested
-citations. The original MRI and native FreeSurfer files are not included.
-
-BrainWeb requests acknowledgment of the database and its methods, including:
+ Acknowledgment of the BrainWeb database and its methods:
 
 - C. A. Cocosco, V. Kollokian, R. K.-S. Kwan, A. C. Evans.
   *BrainWeb: Online Interface to a 3D MRI Simulated Brain Database.*
