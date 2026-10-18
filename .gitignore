@@ -23,3 +23,9 @@ checkpoints/
 *.pt
 *.pth
 *.log
+!examples/brainweb/surfaces/lh_inflated_ico5.vtk
+!examples/brainweb/surfaces/lh_inflated_ico6.vtk
+!examples/brainweb/surfaces/lh_pial_ico5.vtk
+!examples/brainweb/surfaces/lh_pial_ico6.vtk
+!examples/brainweb/ot/ico5_to_ico6/lh_pial_ico6__ot_T_of_x.vtk
+!examples/brainweb/ot/ico6_to_ico5/lh_pial_ico5__ot_T_of_x.vtk

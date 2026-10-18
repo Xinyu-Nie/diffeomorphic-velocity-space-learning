@@ -50,7 +50,18 @@ dvsl-generate train --help
 dvsl-generate sample --help
 ```
 
-Supply your own triangular meshes, exact basis assets and matching populations. Datasets, pretrained models, local reproduction outputs and validation harnesses are excluded. CLI defaults are generic; paper experiment budgets require explicit options.
+For a complete surface-matching example, use the [prepared BrainWeb ico5/ico6 surfaces](examples/brainweb/README.md). Four processed meshes and both cross-resolution OT surfaces are included; no FreeSurfer installation, surface preprocessing or OT computation is needed. The example helper builds and reuses a source Mercer basis, then runs the standard matching CLI:
+
+```bash
+python examples/brainweb/run_matching.py ico5-to-ico5
+python examples/brainweb/run_matching.py ico6-to-ico6
+python examples/brainweb/run_matching.py ico5-to-ico6
+python examples/brainweb/run_matching.py ico6-to-ico5
+```
+
+The first two commands use pointwise attachment for 800 updates. The last two use 500 pointwise updates toward the supplied OT surface, followed by 800 varifold updates toward the real pial target. Run these commands from the repository root after installation; see the example guide for CUDA/memory requirements and expanded CLI commands.
+
+Other workflows require your own triangular meshes, exact basis assets and matching populations. Apart from the explicitly included illustrative BrainWeb assets, datasets, pretrained models, local reproduction outputs and validation harnesses are excluded. CLI defaults are generic; paper experiment budgets require explicit options.
 
 ## Workflow and numerical scope
 
@@ -60,4 +71,4 @@ Component reproduction covered five cortical single-stage and five hippocampal t
 
 ## License
 
-MIT; see [LICENSE](LICENSE).
+MIT for the code; see [LICENSE](LICENSE). The derived BrainWeb example assets have separate [source attribution and data notes](examples/brainweb/NOTICE.md).

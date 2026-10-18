@@ -1,5 +1,6 @@
 include README.md LICENSE pyproject.toml requirements.txt requirements-cu128.txt environment.yml .gitignore
 recursive-include docs *.md
+recursive-include examples/brainweb *.md *.json *.py *.vtk
 include match_df_psm.py
 include match_dtm.py
 include match_ges.py
@@ -12,7 +13,6 @@ include preprocess_corresponding.py
 include preprocess_noncorresponding.py
 prune tests
 prune test
-prune Examples
 prune dist
 prune build
 exclude validate_preprocessing.py SOURCE_MANIFEST.json

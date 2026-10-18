@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "diffeomorphic-velocity-space-learning"
-version = "0.1.0"
+version = "0.1.1"
 description = "Diffeomorphic Velocity-Space Learning for Surface Matching and Generation"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
