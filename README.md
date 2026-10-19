@@ -61,7 +61,7 @@ python examples/brainweb/run_matching.py ico6-to-ico5
 
 The first two commands use pointwise attachment for 800 updates. The last two use 500 pointwise updates toward the supplied OT surface, followed by 800 varifold updates toward the real pial target. Run these commands from the repository root after installation; see the example guide for CUDA/memory requirements and expanded CLI commands.
 
-### Data and Model Availability
+## Data and Model Availability
 
 Due to the data-use agreements and redistribution restrictions associated with the Alzheimer's Disease Neuroimaging Initiative (ADNI) and the Human Connectome Project (HCP), the training datasets and pretrained surface-generation models are not publicly distributed. However, all implementation code, including preprocessing, training, and inference scripts, is provided to support reproducibility.
 
