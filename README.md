@@ -2,7 +2,7 @@
 
 Python implementation of **Diffeomorphic Velocity-Space Learning for Surface Matching and Generation**: Dual-Frame Pullback Surface Matching (DF-PSM) and Calibrated Geometry-Refined Velocity Diffusion (CalVel-Diff).
 
-DF-PSM optimizes Eulerian coefficient paths, integrates the ambient flow and its differential. CalVel-Diff learns optimized paths. The package also includes GES/DTM comparators, surface preprocessing, OT initialization, Mercer bases, and alpha-recovery diagnostics.
+DF-PSM optimizes Eulerian coefficient paths and integrates the ambient flow and its differential. CalVel-Diff learns optimized paths. The package also includes GES/DTM comparators, surface preprocessing, OT initialization, Mercer bases, and alpha-recovery diagnostics.
 
 ## Installation
 
