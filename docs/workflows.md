@@ -37,6 +37,43 @@ Examples show workflow syntax; specify ranks, knots, integration settings, and a
 
 DF-PSM attachments: `pointwise`, `chamfer`, `surface_chamfer`, `varifold`. GES/DTM expose pointwise, vertex Chamfer, and varifold. `--metric` accepts the legacy `--loss` alias. All three have `--help` and two-stage support. Matching exports include controls, trajectories, configuration, history, summary, and deformed VTK. Use fresh output directories.
 
+### GES smoothness normalization and archived weights
+
+GES now uses the same coordinate-averaged displacement smoothness as DF-PSM
+and DTM:
+
+```text
+d_i = q_i(1) - X_i
+R_sm = sum_(i,j in E_F) ||d_i - d_j||^2 / (3 * |E_F|)
+```
+
+`E_F` contains the three edge occurrences of every triangle, including repeated
+interior edges. There is no area, edge-length, or additional coordinate-scale
+normalization. GES at revision `f348efdb369e1d341c183933f874c09da8966a70`
+instead summed the three coordinate squares before averaging over edges,
+giving `R_sm_old = 3 * R_sm`.
+
+To reproduce an archived objective, use `lambda_smooth_new = 3 * lambda_smooth_old`.
+This preserves the weighted loss and its gradient, up to floating-point rounding;
+it does not imply that an unweighted smoothness log entry is unchanged.
+
+| GES configuration | Archived weight | Coordinate-mean weight |
+|---|---:|---:|
+| Cortical comparison | 0.01 | 0.03 |
+| Hippocampal Stage 1 | 1 | 3 |
+| Hippocampal Stage 2 | 30 | 90 |
+| CLI default | 25 | 75 |
+
+The CLI default has been migrated. Explicit `--lambda_smooth` / `--smoothness_weight`
+values are interpreted in the new convention, with no automatic conversion;
+update archived commands and stage-specific overrides before rerunning them.
+New `config.json` and `summary.json` files record
+`smoothness_normalization: coordinate_mean_over_face_edge_occurrences`.
+Their `smooth` history column and `final_smoothness` summary field use the new
+unweighted normalization. This change does not rewrite archived runs or rerun
+the manuscript experiments. Only the GES smoothness convention changes;
+attachment and momentum penalties retain their existing definitions.
+
 ## Alpha recovery
 
 ```bash
