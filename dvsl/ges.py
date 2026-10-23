@@ -4,7 +4,8 @@
 Optimizes source-supported initial momentum density m0, converts to the discrete
 covector p0 = M m0 using vertex areas, and integrates Hamiltonian dynamics with
 the original fixed-step RK4/adjoint implementation. Single or normalized mixed
-Wendland C2/C4 kernels are supported. Metric and numerical defaults are retained.
+Wendland C2/C4 kernels are supported. Smoothness uses the shared coordinate-mean
+normalization; its default weight is rescaled to preserve the original strength.
 """
 
 from __future__ import annotations
@@ -360,12 +361,23 @@ def rkhs_momentum_norm2(gram: torch.Tensor, p0: torch.Tensor) -> torch.Tensor:
     return total
 
 
+SMOOTHNESS_NORMALIZATION = "coordinate_mean_over_face_edge_occurrences"
+
+
 def smoothness_loss(displacement: torch.Tensor, faces: torch.Tensor) -> torch.Tensor:
+    """Return sum_(i,j in E_F) ||d_i-d_j||^2 / (3 * len(E_F)).
+
+    E_F contains all three edge occurrences of every face, so an interior
+    edge contributes once per incident face. No area or edge-length weighting
+    is applied. Before this normalization fix, GES returned three times this
+    value; multiply an archived lambda_smooth by three to preserve its weighted
+    objective and gradient. DF-PSM and DTM already use this coordinate mean.
+    """
     edges = torch.cat(
         [faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]], dim=0
     )
     differences = displacement[edges[:, 0]] - displacement[edges[:, 1]]
-    return differences.pow(2).sum(dim=1).mean()
+    return differences.pow(2).mean()
 
 
 # =============================================================================
@@ -1071,7 +1083,14 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     # Objective.
     parser.add_argument("--w_data", "--attachment_weight", type=float, default=1.0)
-    parser.add_argument("--lambda_smooth", "--smoothness_weight", type=float, default=25.0)
+    parser.add_argument(
+        "--lambda_smooth", "--smoothness_weight", type=float, default=75.0,
+        help=(
+            "Weight for mean squared displacement differences over face-edge "
+            "occurrences and coordinates. Default 75 preserves the historical "
+            "edge-summed default 25. Multiply archived GES weights by 3."
+        ),
+    )
     parser.add_argument("--m0_penalty", choices=["l2", "rkhs"], default="l2")
     parser.add_argument("--m0_reg", "--momentum_weight", type=float, default=0.05)
     parser.add_argument("--m0_rkhs_scale", type=float, default=1.0)
@@ -1310,6 +1329,7 @@ def main() -> None:
     config = vars(args).copy()
     config["method"] = "Geodesic Eulerian Shooting (GES)"
     config["metric"] = args.loss
+    config["smoothness_normalization"] = SMOOTHNESS_NORMALIZATION
     config.update(
         {
             "source_vtk": source.path,
@@ -1424,6 +1444,7 @@ def main() -> None:
         "best_evaluation": int(best.evaluation),
         "final_selected_data_loss": final_data,
         "final_smoothness": final_smooth,
+        "smoothness_normalization": SMOOTHNESS_NORMALIZATION,
         "final_m0_raw": final_m0_raw,
         "initial_metrics": initial_metrics,
         "metrics": metrics,
